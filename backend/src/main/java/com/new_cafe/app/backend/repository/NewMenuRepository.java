@@ -18,8 +18,15 @@ import com.new_cafe.app.backend.entity.Menu;
 @Repository
 public class NewMenuRepository implements MenuRepository {
 
+    private DataSource dataSource;
+
+    public NewMenuRepository() {
+    }
+
     @Autowired
-    DataSource dataSource;
+    public NewMenuRepository(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public List<Menu> findAll() {
@@ -45,7 +52,11 @@ public class NewMenuRepository implements MenuRepository {
                         rs.getString("eng_name"),
                         rs.getString("description"),
                         rs.getString("price"),
-                        ""));
+                        rs.getLong("category_id"),
+                        rs.getBoolean("is_available"),
+                        rs.getTimestamp("created_at").toLocalDateTime(),
+                        rs.getTimestamp("updated_at").toLocalDateTime(),
+                        null));
             }
 
         } catch (SQLException e) {
@@ -76,7 +87,11 @@ public class NewMenuRepository implements MenuRepository {
                             rs.getString("eng_name"),
                             rs.getString("description"),
                             rs.getString("price"),
-                            rs.getString("image")));
+                            rs.getLong("category_id"),
+                            rs.getBoolean("is_available"),
+                            rs.getTimestamp("created_at").toLocalDateTime(),
+                            rs.getTimestamp("updated_at").toLocalDateTime(),
+                            null));
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {

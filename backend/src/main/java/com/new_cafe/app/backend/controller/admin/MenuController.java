@@ -17,8 +17,11 @@ import com.new_cafe.app.backend.service.MenuService;
 @RestController
 public class MenuController {
 
-    @Autowired
     private MenuService menuService;
+
+    public MenuController(MenuService menuService) {
+        this.menuService = menuService;
+    }
 
     // 목록 조회 데이터 반환
     @GetMapping("/admin/menus")

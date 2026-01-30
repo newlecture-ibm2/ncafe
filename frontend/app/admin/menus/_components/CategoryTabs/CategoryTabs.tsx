@@ -2,20 +2,38 @@
 
 import { MenuCategory, Menu } from '@/types';
 import styles from './CategoryTabs.module.css';
+import { useEffect, useState } from 'react';
 
 interface CategoryTabsProps {
-    categories: MenuCategory[];
-    menus: Menu[];
-    selectedCategory: string | null;
     onSelectCategory: (categoryId: string | null) => void;
 }
 
+
 export default function CategoryTabs({
-    categories,
-    menus,
-    selectedCategory,
     onSelectCategory,
 }: CategoryTabsProps) {
+
+    const [categories, setCategories] = useState<MenuCategory[]>([]);
+    const [menus, setMenus] = useState<Menu[]>([]);
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await fetch('http://localhost:8080/admin/categories');
+                if (!response.ok) {
+                    throw new Error('Failed to fetch categories');
+                }
+                const data = await response.json();
+                setCategories(data);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
+
     // 카테고리별 메뉴 개수 계산
     const getMenuCount = (categoryId: string | null) => {
         if (!categoryId) return menus.length;
@@ -42,7 +60,7 @@ export default function CategoryTabs({
                     onClick={() => onSelectCategory(category.id)}
                 >
                     <span className={styles.tabIcon}>{category.icon}</span>
-                    {category.korName}
+                    {category.name}
                     <span className={styles.tabCount}>{getMenuCount(category.id)}</span>
                 </button>
             ))}
