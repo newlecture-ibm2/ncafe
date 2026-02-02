@@ -51,7 +51,7 @@ public class NewMenuRepository implements MenuRepository {
                         rs.getString("kor_name"),
                         rs.getString("eng_name"),
                         rs.getString("description"),
-                        rs.getString("price"),
+                        rs.getInt("price"),
                         rs.getLong("category_id"),
                         rs.getBoolean("is_available"),
                         rs.getTimestamp("created_at").toLocalDateTime(),
@@ -69,7 +69,7 @@ public class NewMenuRepository implements MenuRepository {
     @Override
     public List<Menu> findAllByName(String name) {
         List<Menu> list = new ArrayList<>();
-        String sql = "SELECT * FROM menus2 WHERE kor_name LIKE '%" + name + "%'";
+        String sql = "SELECT * FROM menus WHERE kor_name LIKE '%" + name + "%'";
 
         try {
             Class.forName("org.postgresql.Driver");
@@ -86,7 +86,7 @@ public class NewMenuRepository implements MenuRepository {
                             rs.getString("kor_name"),
                             rs.getString("eng_name"),
                             rs.getString("description"),
-                            rs.getString("price"),
+                            rs.getInt("price"),
                             rs.getLong("category_id"),
                             rs.getBoolean("is_available"),
                             rs.getTimestamp("created_at").toLocalDateTime(),
@@ -95,6 +95,38 @@ public class NewMenuRepository implements MenuRepository {
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<Menu> findAllByCategoryAndSearchQuery(Integer categoryId, String searchQuery) {
+        List<Menu> list = new ArrayList<>();
+        String sql = "SELECT * FROM menus WHERE category_id=" + categoryId + " AND kor_name LIKE '%" + searchQuery
+                + "%'";
+
+        try {
+            try (Connection conn = dataSource.getConnection();
+                    Statement stmt = conn.createStatement();
+                    ResultSet rs = stmt.executeQuery(sql)) {
+
+                while (rs.next()) {
+                    list.add(new Menu(
+                            rs.getLong("id"),
+                            rs.getString("kor_name"),
+                            rs.getString("eng_name"),
+                            rs.getString("description"),
+                            rs.getInt("price"),
+                            rs.getLong("category_id"),
+                            rs.getBoolean("is_available"),
+                            rs.getTimestamp("created_at").toLocalDateTime(),
+                            rs.getTimestamp("updated_at").toLocalDateTime(),
+                            null));
+                }
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
 

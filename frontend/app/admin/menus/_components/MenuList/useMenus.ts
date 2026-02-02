@@ -42,10 +42,10 @@ export function useMenus(selectedCategory: number | undefined, searchQuery: stri
                 console.log("-------------------------------------------------")
                 console.log(data);
                 console.log("-------------------------------------------------")
-                setMenus(data);
+                setMenus(data.menus);
 
                 // 백엔드 데이터를 프론트엔드 Menu 타입으로 변환
-                // const mappedMenus: Menu[] = data.map((item: any) => ({
+                // const mappedMenus: MenuResponse[] = data.map((item: any) => ({
                 //     id: String(item.id),
                 //     korName: item.korName,
                 //     engName: item.engName,

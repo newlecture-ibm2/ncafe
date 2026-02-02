@@ -29,12 +29,8 @@ public class MenuController {
     // 목록 조회 데이터 반환
     @GetMapping("/admin/menus")
     public MenuListResponse menu(MenuListRequest request) {
-        Integer categoryId = request.getCategoryId();
-        System.out.println("categoryId : " + categoryId);
-
-        // menuService = new NewMenuService();
-        List<Menu> menus = menuService.getAll(categoryId);
-        return MenuListResponse.builder().menus(menus).build();
+        MenuListResponse response = menuService.getMenus(request);
+        return response;
     }
 
     // 상세 조회 데이터 반환
