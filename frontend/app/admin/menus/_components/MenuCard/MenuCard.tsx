@@ -4,22 +4,19 @@ import Image from 'next/image';
 import Button from '@/components/common/Button';
 import { Edit, Trash, Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
+import { MenuResponse } from '../MenuList/useMenus';
 
 interface MenuCardProps {
-    menu: Menu;
-    onToggleSoldOut: (id: string, isSoldOut: boolean) => void;
-    onDelete: (id: string) => void;
+    menu: MenuResponse;
 }
 
-export default function MenuCard({ menu, onToggleSoldOut, onDelete }: MenuCardProps) {
-    const primaryImage = menu.images.find(img => img.isPrimary) || menu.images[0];
-
+export default function MenuCard({ menu }: MenuCardProps) {
     return (
         <div className={styles.card}>
             <div className={styles.imageWrapper}>
-                {primaryImage ? (
+                {menu.imageSrc ? (
                     <Image
-                        src={primaryImage.url}
+                        src={menu.imageSrc}
                         alt={menu.korName}
                         fill
                         className={styles.image}
@@ -45,7 +42,6 @@ export default function MenuCard({ menu, onToggleSoldOut, onDelete }: MenuCardPr
                     <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => onToggleSoldOut(menu.id, !menu.isSoldOut)}
                         className={menu.isSoldOut ? styles.actionActive : ''}
                     >
                         {menu.isSoldOut ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -59,7 +55,6 @@ export default function MenuCard({ menu, onToggleSoldOut, onDelete }: MenuCardPr
                         variant="ghost"
                         size="sm"
                         className={styles.deleteButton}
-                        onClick={() => onDelete(menu.id)}
                     >
                         <Trash size={18} />
                     </Button>

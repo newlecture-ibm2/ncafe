@@ -30,11 +30,11 @@ export default function MenuList({ selectedCategory, searchQuery }: MenuListProp
         <div>
             <div className={styles.grid}>
                 {menus.map((menu) => (
-                    <div key={menu.id}>{menu.korName}</div>
-                    // <MenuCard
-                    //     key={menu.id}
-                    //     menu={menu}
-                    // />
+                    // <div key={menu.id}>{menu.korName}</div>
+                    <MenuCard
+                        key={menu.id}
+                        menu={menu}
+                    />
                 ))}
             </div>
 

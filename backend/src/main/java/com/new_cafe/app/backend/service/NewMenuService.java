@@ -13,12 +13,15 @@ import com.new_cafe.app.backend.dto.MenuUpdateRequest;
 import com.new_cafe.app.backend.dto.MenuUpdateResponse;
 import com.new_cafe.app.backend.dto.MenuResponse;
 import com.new_cafe.app.backend.entity.Menu;
+import com.new_cafe.app.backend.repository.CategoryRepository;
 import com.new_cafe.app.backend.repository.MenuRepository;
 
 @Service
 public class NewMenuService implements MenuService {
 
+    private CategoryRepository categoryRepository;
     private MenuRepository menuRepository;
+    // private MenuImageRepository menuImageRepository;
 
     public NewMenuService(MenuRepository menuRepository) {
         this.menuRepository = menuRepository;
@@ -50,7 +53,7 @@ public class NewMenuService implements MenuService {
                         .price(menu.getPrice())
                         .categoryName("커피")
                         .imageSrc("/images/coffee.jpg")
-                        .isAvailable(true)
+                        .isAvailable(menu.getIsAvailable())
                         .isSoldOut(false)
                         .sortOrder(1)
                         .createdAt(menu.getCreatedAt())
