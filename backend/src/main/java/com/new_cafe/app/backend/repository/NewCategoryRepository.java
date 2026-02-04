@@ -49,14 +49,14 @@ public class NewCategoryRepository implements CategoryRepository {
     }
 
     @Override
-    public Category findById(Integer id) {
+    public Category findById(Long id) {
         String sql = "SELECT * FROM categories WHERE id = ?";
         Category category = null;
 
         try (Connection conn = dataSource.getConnection();
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, id);
+            pstmt.setLong(1, id);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {

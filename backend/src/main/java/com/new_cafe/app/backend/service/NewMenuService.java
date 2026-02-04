@@ -15,16 +15,21 @@ import com.new_cafe.app.backend.dto.MenuResponse;
 import com.new_cafe.app.backend.entity.Menu;
 import com.new_cafe.app.backend.repository.CategoryRepository;
 import com.new_cafe.app.backend.repository.MenuRepository;
+import com.new_cafe.app.backend.repository.MenuImageRepository;
+import com.new_cafe.app.backend.entity.MenuImage;
 
 @Service
 public class NewMenuService implements MenuService {
 
     private CategoryRepository categoryRepository;
     private MenuRepository menuRepository;
-    // private MenuImageRepository menuImageRepository;
+    private MenuImageRepository menuImageRepository; // menuImageRepository.findAllByMenuId(menu.getId());
 
-    public NewMenuService(MenuRepository menuRepository) {
+    public NewMenuService(MenuRepository menuRepository, CategoryRepository categoryRepository,
+            MenuImageRepository menuImageRepository) {
         this.menuRepository = menuRepository;
+        this.categoryRepository = categoryRepository;
+        this.menuImageRepository = menuImageRepository;
     }
 
     @Override
@@ -44,21 +49,37 @@ public class NewMenuService implements MenuService {
 
         List<MenuResponse> menuResponses = menus
                 .stream()
-                .map(menu -> MenuResponse
-                        .builder()
-                        .id(menu.getId())
-                        .korName(menu.getKorName())
-                        .engName(menu.getEngName())
-                        .description(menu.getDescription())
-                        .price(menu.getPrice())
-                        .categoryName("커피")
-                        .imageSrc("/images/coffee.jpg")
-                        .isAvailable(menu.getIsAvailable())
-                        .isSoldOut(false)
-                        .sortOrder(1)
-                        .createdAt(menu.getCreatedAt())
-                        .updatedAt(menu.getUpdatedAt())
-                        .build())
+                .map(menu -> {
+
+                    String categoryName = categoryRepository.findById(menu.getCategoryId()).getName();
+
+                    List<MenuImage> images = menuImageRepository.findAllByMenuId(menu.getId());
+                    // Primary image or first image or default
+
+                    // images의 개수가 0인 경우는 blank.png 이미지를 사용하도록 하고
+                    String imageSrc = "blank.png";
+                    // images의 개수가 1인 경우는 srcUrl을 사용하고
+                    if (images.size() > 0) {
+                        imageSrc = images.get(0).getSrcUrl();
+                    }
+
+                    return MenuResponse
+                            .builder()
+                            .id(menu.getId())
+                            .korName(menu.getKorName())
+                            .engName(menu.getEngName())
+                            .description(menu.getDescription())
+                            .price(menu.getPrice())
+                            .categoryName(categoryName) // menu.getCategoryId(); ->
+                                                        // categoryRepository.findById(menu.getCategoryId()).getName()
+                            .imageSrc(imageSrc) // Real image src
+                            .isAvailable(menu.getIsAvailable())
+                            .isSoldOut(false)
+                            .sortOrder(1)
+                            .createdAt(menu.getCreatedAt())
+                            .updatedAt(menu.getUpdatedAt())
+                            .build();
+                })
                 .toList();
 
         return MenuListResponse
