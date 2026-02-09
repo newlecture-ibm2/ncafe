@@ -146,4 +146,35 @@ public class NewMenuRepository implements MenuRepository {
         return list;
     }
 
+    @Override
+    public Menu findById(Long id) {
+        String sql = "SELECT * FROM menus WHERE id=" + id;
+
+        try (Connection conn = dataSource.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return new Menu(
+                        rs.getLong("id"),
+                        rs.getString("kor_name"),
+                        rs.getString("eng_name"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getLong("category_id"),
+                        rs.getBoolean("is_available"),
+                        1, // sortOrder (dummy)
+                        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime()
+                                : null,
+                        rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                : null,
+                        null, null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }

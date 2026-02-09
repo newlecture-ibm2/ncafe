@@ -4,6 +4,7 @@ import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { getMenuById } from '@/mocks/menuData';
 import { Menu } from '@/types';
+import { useMenu } from './useMenu';
 import MenuDetailHeader from './_components/MenuDetailHeader';
 import MenuDetailInfo from './_components/MenuDetailInfo';
 import MenuImages from './_components/MenuImages';
@@ -14,59 +15,28 @@ interface MenuDetailPageProps {
     params: Promise<{ id: string }>;
 }
 
-export default function MenuDetailPage({ params }: MenuDetailPageProps) {
+export default function MenuDetailPage({ params }: { params: Promise<{ id: string }> }) {
     const { id } = use(params);
-    const router = useRouter();
-    const [menu, setMenu] = useState<Menu | undefined>(undefined);
-    const [isLoading, setIsLoading] = useState(true);
+    const { menu, loading, error } = useMenu(id);
 
-    useEffect(() => {
-        const foundMenu = getMenuById(id);
-        setMenu(foundMenu);
-        setIsLoading(false);
-    }, [id]);
-
-    const handleDelete = () => {
-        if (window.confirm('정말 이 메뉴를 삭제하시겠습니까?')) {
-            alert('메뉴가 삭제되었습니다.');
-            router.push('/admin/menus');
-        }
-    };
-
-    if (isLoading) {
-        return <div className="p-8 text-center text-gray-500">메뉴 정보를 불러오는 중입니다...</div>;
-    }
-
-    if (!menu) {
-        return (
-            <div className="p-8 text-center">
-                <h2 className="text-xl font-bold mb-4">메뉴를 찾을 수 없습니다</h2>
-                <button
-                    onClick={() => router.push('/admin/menus')}
-                    className="text-blue-500 hover:underline"
-                >
-                    목록으로 돌아가기
-                </button>
-            </div>
-        );
-    }
+    if (loading) return <div>로딩 중...</div>;
+    if (error) return <div>에러 발생: {error.message}</div>;
+    if (!menu) return <div>메뉴를 찾을 수 없습니다.</div>;
 
     return (
         <main>
             <MenuDetailHeader
-                title={menu.korName}
-                menuId={menu.id}
-                onDelete={handleDelete}
+                id={menu.id.toString()}
             />
 
             <div className={styles.pageLayout}>
                 <div className={styles.column}>
-                    <MenuImages images={menu.images} altText={menu.korName} />
-                    <MenuDetailInfo menu={menu} />
+                    <MenuImages />
+                    <MenuDetailInfo />
                 </div>
 
                 <div className={styles.column}>
-                    <MenuOptions options={menu.options} />
+                    <MenuOptions />
                 </div>
             </div>
         </main>
