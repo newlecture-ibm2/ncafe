@@ -29,7 +29,8 @@ export function useMenu(id: string) {
         const fetchMenu = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`http://localhost:8080/api/v1/admin/menus/${id}`);
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+                const response = await fetch(`${baseUrl}/api/v1/admin/menus/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch menu');
                 }

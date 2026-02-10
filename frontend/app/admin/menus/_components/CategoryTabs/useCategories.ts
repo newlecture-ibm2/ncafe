@@ -22,7 +22,8 @@ export function useCategories() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/v1/admin/categories');
+                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+                const response = await fetch(`${baseUrl}/api/v1/admin/categories`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch categories');
                 }

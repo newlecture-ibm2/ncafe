@@ -18,7 +18,7 @@ export default function MenuCard({ menu }: MenuCardProps) {
             <div className={styles.imageWrapper}>
                 {menu.imageSrc ? (
                     <Image
-                        src={`http://localhost:8080/${menu.imageSrc}`}
+                        src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/${menu.imageSrc}`}
                         alt={menu.korName}
                         fill
                         className={styles.image}
