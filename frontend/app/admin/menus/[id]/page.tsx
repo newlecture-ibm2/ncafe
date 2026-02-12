@@ -20,7 +20,6 @@ export default function MenuDetailPage({ params }: { params: Promise<{ id: numbe
             />
             <div className={styles.pageLayout}>
                 <div className={styles.column}>
-                    {/* localhost:8080/admin/menus/{id}/menu-images */}
                     <MenuImages menuId={id} />
                     <MenuDetailInfo id={id} />
                 </div>

@@ -61,7 +61,7 @@ export default function MenuOptions() {
                         <span>{option.name}</span>
                         <div className={styles.badges}>
                             <span className={styles.optionType}>
-                                {option.type === 'radio' ? '단일 선택' : '다중 선택'}
+                                {option.type === 'single' ? '단일 선택' : '다중 선택'}
                             </span>
                             {option.required && (
                                 <span className={`${styles.optionBadge} ${styles.requiredBadge}`}>필수</span>

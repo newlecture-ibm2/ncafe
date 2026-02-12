@@ -50,7 +50,7 @@ export default function MenuImages({ menuId }: { menuId: number }) {
             <div className={styles.primaryImageWrapper}>
                 {selectedImage && (
                     <Image
-                        src={`http://localhost:8080/${selectedImage.srcUrl}`}
+                        src={`/api/v1/${selectedImage.srcUrl}`}
                         alt="상세 이미지"
                         fill
                         className={styles.primaryImage}
@@ -74,7 +74,7 @@ export default function MenuImages({ menuId }: { menuId: number }) {
                         onClick={() => setSelectedImageId(image.id)}
                     >
                         <Image
-                            src={`http://localhost:8080/${image.srcUrl}`}
+                            src={`/images/${image.srcUrl}`}
                             alt="썸네일"
                             fill
                             className={styles.thumbnailImage}

@@ -20,9 +20,9 @@ export function useMenuDetail(id: number | string) {
         if (!id) return;
 
         const fetchMenu = async () => {
-            console.log('fetchMenu id : ' + id, `http://localhost:8080/admin/menus/${id}`);
+
             try {
-                const response = await fetch(`http://localhost:8080/admin/menus/${id}`);
+                const response = await fetch(`/api/admin/menus/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch menu detail');
                 }
