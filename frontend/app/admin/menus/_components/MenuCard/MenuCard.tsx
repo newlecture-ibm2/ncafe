@@ -10,36 +10,16 @@ interface MenuCardProps {
     menu: MenuResponse;
 }
 
-<<<<<<< HEAD
-
 export default function MenuCard({ menu }: MenuCardProps) {
-    const baseUrl = '/images'; // 이미지 경로는 rewrite 규칙('/images/*')을 따름
+    const baseUrl = '/images';
 
-    return (
-        <div className={styles.card}>
-            <div className={styles.imageWrapper}>
-                {menu.imageSrc && menu.imageSrc !== 'blank.png' ? (
-                    <Image
-                        src={`${baseUrl}/${menu.imageSrc}`}
-                        alt={menu.korName}
-                        fill
-                        className={styles.image}
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    />
-                ) : (
-                    <div className={styles.noImage}>No Image</div>
-                )}
-=======
-export default function MenuCard({ menu }: MenuCardProps) {
     return (
         <div className={styles.card}>
             <div className={styles.imageWrapper}>
                 <Link href={`/admin/menus/${menu.id}`}>
-                    {menu.imageSrc ? (
-                        // http://localhost:8080/api/v1/admin/menus
-                        // http://localhost:3000/api/v1/images/1.jpg
+                    {menu.imageSrc && menu.imageSrc !== 'blank.png' ? (
                         <Image
-                            src={`/images/${menu.imageSrc}`}
+                            src={`${baseUrl}/${menu.imageSrc}`}
                             alt={menu.korName}
                             fill
                             className={styles.image}
@@ -49,7 +29,6 @@ export default function MenuCard({ menu }: MenuCardProps) {
                         <div className={styles.noImage}>No Image</div>
                     )}
                 </Link>
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
                 <div className={styles.badges}>
                     {menu.isSoldOut && <span className={styles.badgeSoldOut}>품절</span>}
                     {!menu.isAvailable && <span className={styles.badgeHidden}>숨김</span>}

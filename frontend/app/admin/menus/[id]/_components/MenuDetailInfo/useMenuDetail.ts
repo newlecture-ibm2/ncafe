@@ -5,39 +5,39 @@ export interface MenuDetail {
     korName: string;
     engName: string;
     categoryName: string;
-    price: number;
+    price: number | string; // Allow string if formatted
     isAvailable: boolean;
     createdAt: string;
     description: string;
 }
 
 export function useMenuDetail(id: number | string) {
-
-    console.log('useMenuDetail id : ' + id);
-    const [menu, setMenu] = useState<MenuDetail | null>(null);
+    const [menuDetail, setMenuDetail] = useState<MenuDetail | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState<Error | null>(null);
 
     useEffect(() => {
         if (!id) return;
 
         const fetchMenu = async () => {
-
+            setLoading(true);
             try {
                 const response = await fetch(`/api/admin/menus/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch menu detail');
                 }
-                console.log('response : ' + response);
                 const data = await response.json();
-                setMenu(data);
-
-                console.log('menu : ' + data);
-            } catch (error) {
-                console.error("Error loading menu detail:", error);
+                setMenuDetail(data);
+            } catch (err) {
+                console.error("Error loading menu detail:", err);
+                setError(err instanceof Error ? err : new Error('Unknown error'));
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchMenu();
     }, [id]);
 
-    return { menu };
+    return { menuDetail, loading, error };
 }

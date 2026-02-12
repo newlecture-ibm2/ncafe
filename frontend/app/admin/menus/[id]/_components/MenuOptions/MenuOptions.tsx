@@ -1,27 +1,11 @@
 import { ListChecks } from 'lucide-react';
 import styles from './MenuOptions.module.css';
+import { MenuOption } from '@/types';
 
-<<<<<<< HEAD
 export default function MenuOptions() {
     // 부모로부터 받던 props를 끊고 컴포넌트 내부에서 자체적으로 데이터를 관리하거나 
     // 정적인 스타일 구조를 유지합니다.
-    const options = [
-        {
-            id: '1',
-            name: '기본 옵션 (예시)',
-            type: 'radio',
-            required: true,
-            items: [
-                { id: 'i1', name: '옵션 항목 1', priceDelta: 0 },
-                { id: 'i2', name: '옵션 항목 2', priceDelta: 500 },
-            ]
-        }
-    ];
-=======
-
-
-export default function MenuOptions() {
-    let options: MenuOption[] = [{
+    const options: MenuOption[] = [{
         id: 1,
         name: '크기',
         type: 'single',
@@ -50,6 +34,7 @@ export default function MenuOptions() {
             { id: 2, name: 'ice', priceDelta: 0 },
         ]
     }];
+
     if (!options || options.length === 0) {
         return (
             <section className={styles.card}>
@@ -63,7 +48,6 @@ export default function MenuOptions() {
             </section>
         );
     }
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
 
     return (
         <section className={styles.card}>

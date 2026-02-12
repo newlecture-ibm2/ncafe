@@ -13,23 +13,13 @@ export interface CategoryListResponseDto {
     totalCount: number;
 }
 
-<<<<<<< HEAD
-// ${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/categories
-
-
-=======
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
 export function useCategories() {
     const [categories, setCategories] = useState<CategoryResponseDto[]>([]);
 
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-<<<<<<< HEAD
-                const response = await fetch(`/api/admin/categories`);
-=======
                 const response = await fetch('/api/admin/categories');
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
                 if (!response.ok) {
                     throw new Error('Failed to fetch categories');
                 }

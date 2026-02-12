@@ -13,6 +13,7 @@ export default function MenuDetailPage({ params }: { params: Promise<{ id: strin
     return (
         <main>
             <MenuDetailHeader
+                id={id}
                 title="메뉴 상세"
             />
             <div className={styles.pageLayout}>
