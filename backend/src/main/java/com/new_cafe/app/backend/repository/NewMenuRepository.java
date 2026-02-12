@@ -149,7 +149,6 @@ public class NewMenuRepository implements MenuRepository {
     @Override
     public Menu findById(Long id) {
         String sql = "SELECT * FROM menus WHERE id=" + id;
-<<<<<<< HEAD
 
         try (Connection conn = dataSource.getConnection();
                 Statement stmt = conn.createStatement();
@@ -170,34 +169,11 @@ public class NewMenuRepository implements MenuRepository {
                         rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime()
                                 : null,
                         null, null);
-=======
-        try {
-            try (Connection conn = dataSource.getConnection();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery(sql)) {
-
-                while (rs.next()) {
-                    return new Menu(
-                            rs.getLong("id"),
-                            rs.getString("kor_name"),
-                            rs.getString("eng_name"),
-                            rs.getString("description"),
-                            rs.getInt("price"),
-                            rs.getLong("category_id"),
-                            rs.getBoolean("is_available"),
-                            rs.getTimestamp("created_at").toLocalDateTime(),
-                            rs.getTimestamp("updated_at").toLocalDateTime(),
-                            null);
-                }
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
 
-=======
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
         return null;
     }
 

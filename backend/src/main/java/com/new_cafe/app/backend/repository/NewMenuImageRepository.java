@@ -9,10 +9,6 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
-<<<<<<< HEAD
-=======
-import org.springframework.beans.factory.annotation.Autowired;
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
 import org.springframework.stereotype.Repository;
 
 import com.new_cafe.app.backend.entity.MenuImage;
@@ -20,16 +16,11 @@ import com.new_cafe.app.backend.entity.MenuImage;
 @Repository
 public class NewMenuImageRepository implements MenuImageRepository {
 
-<<<<<<< HEAD
     private final DataSource dataSource;
 
     public NewMenuImageRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
-=======
-    @Autowired
-    private DataSource dataSource;
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
 
     @Override
     public List<MenuImage> findAllByMenuId(Long menuId) {
@@ -40,27 +31,21 @@ public class NewMenuImageRepository implements MenuImageRepository {
                 PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setLong(1, menuId);
-<<<<<<< HEAD
-=======
 
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     list.add(MenuImage.builder()
                             .id(rs.getLong("id"))
                             .menuId(rs.getLong("menu_id"))
-<<<<<<< HEAD
                             .url(rs.getString("src_url"))
-=======
-                            .srcUrl(rs.getString("src_url"))
-                            .createdAt(rs.getTimestamp("created_at").toLocalDateTime())
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
                             .sortOrder(rs.getInt("sort_order"))
+                            .createdAt(rs.getTimestamp("created_at") != null
+                                    ? rs.getTimestamp("created_at").toLocalDateTime()
+                                    : null)
                             .build());
                 }
             }
         } catch (SQLException e) {
-<<<<<<< HEAD
             System.err.println("NewMenuImageRepository.findAllByMenuId Error: " + e.getMessage());
         }
         return list;
@@ -96,11 +81,4 @@ public class NewMenuImageRepository implements MenuImageRepository {
             System.err.println("NewMenuImageRepository.deleteById Error: " + e.getMessage());
         }
     }
-=======
-            e.printStackTrace();
-        }
-
-        return list;
-    }
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
 }
