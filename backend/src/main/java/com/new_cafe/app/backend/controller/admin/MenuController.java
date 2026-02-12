@@ -16,7 +16,7 @@ import com.new_cafe.app.backend.dto.MenuListResponse;
 import com.new_cafe.app.backend.dto.MenuImageListResponse;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class MenuController {
 
     private MenuService menuService;

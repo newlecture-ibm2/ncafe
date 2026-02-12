@@ -30,7 +30,7 @@ export function useMenu(id: string) {
         const fetchMenu = async () => {
             try {
                 setLoading(true);
-                const response = await fetch(`/api/v1/admin/menus/${id}`);
+                const response = await fetch(`/api/admin/menus/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch menu');
                 }

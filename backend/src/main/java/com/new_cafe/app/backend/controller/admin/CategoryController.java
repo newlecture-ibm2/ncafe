@@ -15,7 +15,7 @@ import com.new_cafe.app.backend.entity.Category;
 import com.new_cafe.app.backend.service.CategoryService;
 
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 public class CategoryController {
 
     @Autowired
