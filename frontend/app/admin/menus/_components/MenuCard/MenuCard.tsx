@@ -12,13 +12,14 @@ interface MenuCardProps {
 
 
 export default function MenuCard({ menu }: MenuCardProps) {
+    const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
     return (
         <div className={styles.card}>
             <div className={styles.imageWrapper}>
-                {menu.imageSrc ? (
+                {menu.imageSrc && menu.imageSrc !== 'blank.png' ? (
                     <Image
-                        src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/${menu.imageSrc}`}
+                        src={`${baseUrl}/${menu.imageSrc}`}
                         alt={menu.korName}
                         fill
                         className={styles.image}

@@ -20,8 +20,6 @@ export default function MenuImages() {
     // 기본 이미지 설정 (데이터 로드 후 첫 번째 이미지)
     const displayImage = selectedImage || (images.length > 0 ? images[0] : null);
 
-    const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-
     if (loading) return <div className={styles.loading}>이미지 로딩 중...</div>;
     // 에러 발생 시에도 빈 상태를 보여줄 수 있으므로 null 반환보다는 UI 유지
 
@@ -35,7 +33,7 @@ export default function MenuImages() {
             <div className={styles.primaryImageWrapper}>
                 {displayImage ? (
                     <Image
-                        src={displayImage.url.startsWith('http') ? displayImage.url : `${baseUrl}/${displayImage.url}`}
+                        src={displayImage.url}
                         alt={displayImage.altText || `${menuName} 대표 이미지`}
                         fill
                         className={styles.primaryImage}
@@ -56,7 +54,7 @@ export default function MenuImages() {
                         onClick={() => setSelectedImage(image)}
                     >
                         <Image
-                            src={image.url.startsWith('http') ? image.url : `${baseUrl}/${image.url}`}
+                            src={image.url}
                             alt={image.altText || `${menuName} 이미지`}
                             fill
                             className={styles.thumbnailImage}

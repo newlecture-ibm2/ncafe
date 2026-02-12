@@ -30,8 +30,7 @@ export function useMenuDetail(id: string) {
             try {
                 setLoading(true);
                 // 백엔드 API 호출 (실제 API 엔드포인트에 맞게 조정 필요)
-                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-                const response = await fetch(`${baseUrl}/api/v1/admin/menus/${id}`);
+                const response = await fetch(`/api/v1/admin/menus/${id}`);
 
                 if (!response.ok) {
                     throw new Error('메뉴 정보를 가져오는 데 실패했습니다.');

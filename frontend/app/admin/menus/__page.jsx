@@ -15,10 +15,11 @@ export default function MenusPage() {
 
     useEffect(() => {
 
-        // http://localhost:8080/admin/menus
+        // ${process.env.NEXT_PUBLIC_API_URL}/admin/menus
         const fetchMenus = async () => {
 
-            const url = new URL("http://localhost:8080/admin/menus");
+            const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+            const url = new URL(`${baseUrl}/admin/menus`);
 
             const params = url.searchParams;
             if (category) {

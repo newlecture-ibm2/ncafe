@@ -33,8 +33,7 @@ export function useMenus(selectedCategory: number | undefined, searchQuery: stri
 
         const fetchMenus = async () => {
 
-            const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-            const url = new URL(`${baseUrl}/api/v1/admin/menus`);
+            const url = new URL(`/api/admin/menus`, window.location.origin);
 
             const params = url.searchParams;
             if (selectedCategory) {

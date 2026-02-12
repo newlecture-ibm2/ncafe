@@ -4,6 +4,7 @@ export interface MenuImageResponse {
     id: number;
     url: string;
     sortOrder: number;
+    altText?: string;
 }
 
 export interface MenuDetailResponse {
@@ -29,8 +30,7 @@ export function useMenu(id: string) {
         const fetchMenu = async () => {
             try {
                 setLoading(true);
-                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-                const response = await fetch(`${baseUrl}/api/v1/admin/menus/${id}`);
+                const response = await fetch(`/api/v1/admin/menus/${id}`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch menu');
                 }

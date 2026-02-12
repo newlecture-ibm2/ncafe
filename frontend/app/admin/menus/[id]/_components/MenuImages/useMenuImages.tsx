@@ -22,8 +22,7 @@ export function useMenuImages(menuId: string) {
         const fetchImages = async () => {
             try {
                 setLoading(true);
-                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-                const response = await fetch(`${baseUrl}/api/v1/admin/menus/${menuId}/menu-images`);
+                const response = await fetch(`/api/v1/admin/menus/${menuId}/menu-images`);
 
                 if (!response.ok) {
                     throw new Error('Menu images fetch failed');

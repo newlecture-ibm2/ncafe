@@ -13,7 +13,7 @@ export interface CategoryListResponseDto {
     totalCount: number;
 }
 
-// http://localhost:8080/api/v1/admin/categories
+// ${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/categories
 
 
 export function useCategories() {
@@ -22,8 +22,7 @@ export function useCategories() {
     useEffect(() => {
         const fetchCategories = async () => {
             try {
-                const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
-                const response = await fetch(`${baseUrl}/api/v1/admin/categories`);
+                const response = await fetch(`/api/v1/admin/categories`);
                 if (!response.ok) {
                     throw new Error('Failed to fetch categories');
                 }
