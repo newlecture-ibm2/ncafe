@@ -1,6 +1,7 @@
 package com.new_cafe.app.backend.entity;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,10 +20,11 @@ public class Menu {
     private Integer price;
     private Long categoryId;
     private Boolean isAvailable;
+    private Integer sortOrder; // Added field
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
     private Category category;
-    // private List<MenuImage> images;
+    private List<MenuImage> images; // Added field
 
 }

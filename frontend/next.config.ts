@@ -2,19 +2,17 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    if (process.env.NODE_ENV === 'development') {
-      return [
-        {
-          source: '/api/:path*',
-          destination: 'http://localhost:8080/:path*',
-        },
-        {
-          source: '/images/:path*',
-          destination: 'http://localhost:8080/:path*',
-        },
-      ];
-    }
-    return [];
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${apiUrl}/api/:path*`,
+      },
+      {
+        source: '/images/:path*',
+        destination: `${apiUrl}/:path*`,
+      },
+    ];
   },
   images: {
     unoptimized: true, // 로컬 개발용
@@ -23,6 +21,16 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+        port: '8080',
+      },
+      ...(process.env.NEXT_PUBLIC_API_URL ? [{
+        protocol: new URL(process.env.NEXT_PUBLIC_API_URL).protocol.replace(':', '') as 'http' | 'https',
+        hostname: new URL(process.env.NEXT_PUBLIC_API_URL).hostname,
+        port: new URL(process.env.NEXT_PUBLIC_API_URL).port,
+      }] : []),
     ],
   },
 };

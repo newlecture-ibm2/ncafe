@@ -8,12 +8,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.new_cafe.app.backend.entity.Category;
 import com.new_cafe.app.backend.service.CategoryService;
 
 @RestController
+@RequestMapping("/api")
 public class CategoryController {
 
     @Autowired

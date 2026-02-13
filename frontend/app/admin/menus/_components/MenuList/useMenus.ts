@@ -15,7 +15,7 @@ export interface MenuResponse {
     isSoldOut: boolean,
     sortOrder: number,
     createdAt: string,
-    updatedAt: string
+    updatedAt: string,
 }
 
 export interface MenuListResponse {

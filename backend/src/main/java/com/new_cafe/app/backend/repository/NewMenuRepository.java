@@ -54,9 +54,10 @@ public class NewMenuRepository implements MenuRepository {
                         rs.getInt("price"),
                         rs.getLong("category_id"),
                         rs.getBoolean("is_available"),
-                        rs.getTimestamp("created_at").toLocalDateTime(),
-                        rs.getTimestamp("updated_at").toLocalDateTime(),
-                        null));
+                        1, // sortOrder (dummy for now)
+                        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime() : null,
+                        rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime() : null,
+                        null, null));
             }
 
         } catch (SQLException e) {
@@ -89,9 +90,12 @@ public class NewMenuRepository implements MenuRepository {
                             rs.getInt("price"),
                             rs.getLong("category_id"),
                             rs.getBoolean("is_available"),
-                            rs.getTimestamp("created_at").toLocalDateTime(),
-                            rs.getTimestamp("updated_at").toLocalDateTime(),
-                            null));
+                            1, // sortOrder (dummy)
+                            rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime()
+                                    : null,
+                            rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                    : null,
+                            null, null));
                 }
             }
         } catch (ClassNotFoundException | SQLException e) {
@@ -126,12 +130,16 @@ public class NewMenuRepository implements MenuRepository {
                             rs.getInt("price"),
                             rs.getLong("category_id"),
                             rs.getBoolean("is_available"),
-                            rs.getTimestamp("created_at").toLocalDateTime(),
-                            rs.getTimestamp("updated_at").toLocalDateTime(),
-                            null));
+                            1, // sortOrder (dummy)
+                            rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime()
+                                    : null,
+                            rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                    : null,
+                            null, null));
                 }
             }
         } catch (SQLException e) {
+            System.err.println("NewMenuRepository.findAllByCategoryAndSearchQuery SQLException: " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -141,28 +149,31 @@ public class NewMenuRepository implements MenuRepository {
     @Override
     public Menu findById(Long id) {
         String sql = "SELECT * FROM menus WHERE id=" + id;
-        try {
-            try (Connection conn = dataSource.getConnection();
-                    Statement stmt = conn.createStatement();
-                    ResultSet rs = stmt.executeQuery(sql)) {
 
-                while (rs.next()) {
-                    return new Menu(
-                            rs.getLong("id"),
-                            rs.getString("kor_name"),
-                            rs.getString("eng_name"),
-                            rs.getString("description"),
-                            rs.getInt("price"),
-                            rs.getLong("category_id"),
-                            rs.getBoolean("is_available"),
-                            rs.getTimestamp("created_at").toLocalDateTime(),
-                            rs.getTimestamp("updated_at").toLocalDateTime(),
-                            null);
-                }
+        try (Connection conn = dataSource.getConnection();
+                Statement stmt = conn.createStatement();
+                ResultSet rs = stmt.executeQuery(sql)) {
+
+            if (rs.next()) {
+                return new Menu(
+                        rs.getLong("id"),
+                        rs.getString("kor_name"),
+                        rs.getString("eng_name"),
+                        rs.getString("description"),
+                        rs.getInt("price"),
+                        rs.getLong("category_id"),
+                        rs.getBoolean("is_available"),
+                        1, // sortOrder (dummy)
+                        rs.getTimestamp("created_at") != null ? rs.getTimestamp("created_at").toLocalDateTime()
+                                : null,
+                        rs.getTimestamp("updated_at") != null ? rs.getTimestamp("updated_at").toLocalDateTime()
+                                : null,
+                        null, null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 

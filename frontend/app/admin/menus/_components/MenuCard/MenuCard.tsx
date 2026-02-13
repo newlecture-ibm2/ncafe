@@ -11,15 +11,15 @@ interface MenuCardProps {
 }
 
 export default function MenuCard({ menu }: MenuCardProps) {
+    const baseUrl = '/images';
+
     return (
         <div className={styles.card}>
             <div className={styles.imageWrapper}>
                 <Link href={`/admin/menus/${menu.id}`}>
-                    {menu.imageSrc ? (
-                        // http://localhost:8080/api/v1/admin/menus
-                        // http://localhost:3000/api/v1/images/1.jpg
+                    {menu.imageSrc && menu.imageSrc !== 'blank.png' ? (
                         <Image
-                            src={`/images/${menu.imageSrc}`}
+                            src={`${baseUrl}/${menu.imageSrc}`}
                             alt={menu.korName}
                             fill
                             className={styles.image}

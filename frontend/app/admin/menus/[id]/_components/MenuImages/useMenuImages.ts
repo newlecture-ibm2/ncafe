@@ -1,22 +1,21 @@
 import { useState, useEffect } from 'react';
 
 // 백엔드 & 프론트엔드 통합 인터페이스
-export interface MenuImageResponse {
+export interface MenuImage {
     id: number;
     menuId: number;
-    srcUrl: string;
+    url: string;
     sortOrder: number;
-    // 프론트엔드에서 추가로 사용하는 속성 (optional 처리하거나, 데이터 로드 시 반드시 채워줌)
-    isPrimary: boolean;
-    createdAt?: string; // 백엔드에서 오지만 뷰에서는 안쓰일 수도 있음
+    altText?: string;
+    createdAt?: string;
 }
 
 interface MenuImageListResponse {
-    images: MenuImageResponse[];
+    images: MenuImage[];
 }
 
 export function useMenuImages(menuId: string | number) {
-    const [images, setImages] = useState<MenuImageResponse[]>([]);
+    const [images, setImages] = useState<MenuImage[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<unknown>(null);
 
@@ -32,11 +31,10 @@ export function useMenuImages(menuId: string | number) {
                 }
                 const data: MenuImageListResponse = await response.json();
 
-                // 데이터 처리: isPrimary 등 파생 속성 계산
-                // 백엔드에서 isPrimary가 안 오더라도, 여기서 계산해서 MenuImageResponse 타입을 만족시킴
-                const processedImages: MenuImageResponse[] = data.images.map((img) => ({
+                // 데이터 처리: 정렬 등
+                const processedImages = data.images.map(img => ({
                     ...img,
-                    isPrimary: img.sortOrder === 1
+                    // 필요한 경우 url 경로 보정 등을 여기서 수행할 수 있음
                 }));
 
                 // 정렬 (sortOrder 기준 오름차순)
