@@ -1,0 +1,89 @@
+/* login.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    /* 오타 수정: _ -> - */
+    align-items: center;
+    /* 오타 수정: _ -> - */
+    min-height: 100vh;
+    background-color: var(--color-primary-50);
+    /* 커피 테마 배경색 적용 */
+    padding: 1rem;
+}
+
+.loginCard {
+    background-color: var(--bg-primary);
+    padding: 2.5rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    border: 1px solid var(--color-primary-100);
+    /* 은은한 테두리 추가 */
+}
+
+.title {
+    text-align: center;
+    color: var(--color-primary-900);
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.formGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.label {
+    font-size: 0.9rem;
+    color: var(--color-gray-600);
+    font-weight: 600;
+}
+
+.input {
+    padding: 0.75rem;
+    border: 1px solid var(--color-primary-200);
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    background-color: var(--bg-primary);
+}
+
+.input:focus {
+    outline: none;
+    border-color: var(--color-primary-500);
+    box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.button {
+    background-color: var(--color-primary-600);
+    /* 커피색 버튼 */
+    color: white;
+    border: none;
+    padding: 1rem;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: 1rem;
+}
+
+.button:hover {
+    background-color: var(--color-primary-700);
+}
+
+.errorMessage {
+    color: var(--color-error);
+    font-size: 0.875rem;
+    text-align: center;
+    margin-top: 0.5rem;
+    background-color: var(--color-error-light);
+    padding: 0.5rem;
+    border-radius: var(--radius-sm);
+}
