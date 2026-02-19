@@ -26,6 +26,6 @@ USER nextjs
 
 EXPOSE 3001
 
+# 포트 3001을 명시적으로 사용하도록 명령 수정
 ENV PORT 3001
-
-CMD ["npm", "start"]
+CMD ["sh", "-c", "npm start -- -p 3001"]

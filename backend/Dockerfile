@@ -10,6 +10,8 @@ FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
 COPY --from=builder /app/build/libs/*.jar app.jar
 EXPOSE 8081
+
 RUN mkdir -p /app/upload
 VOLUME /app/upload
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# 내부 실행 포트를 8081로 지정하는 옵션 추가
+ENTRYPOINT ["java", "-Dserver.port=8081", "-jar", "app.jar"]
