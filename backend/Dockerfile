@@ -3,7 +3,7 @@ FROM gradle:8.5.0-jdk21 AS builder
 WORKDIR /app
 COPY . .
 RUN chmod +x ./gradlew
-RUN ./gradlew bootJar --no-daemon -x test
+RUN ./gradlew bootJar --no-daemon -x test --max-workers=1 -Dorg.gradle.jvmargs="-Xmx1g"
 
 # Runtime stage
 FROM eclipse-temurin:21-jre-alpine
