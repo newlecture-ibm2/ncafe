@@ -15,17 +15,8 @@ export default function MenusPage() {
 
     useEffect(() => {
 
-<<<<<<< HEAD
-        // ${process.env.NEXT_PUBLIC_API_URL}/admin/menus
         const fetchMenus = async () => {
-
-            const baseUrl = '';
-            const url = new URL(`${baseUrl}/api/v1/admin/menus`, window.location.origin);
-=======
-        const fetchMenus = async () => {
-
-            const url = new URL("/api/admin/menus", window.location.origin);
->>>>>>> acd0828dfdf61b419e0c5a38f70f4ab06fe7708e
+            const url = new URL("/api/menus", window.location.origin);
 
             const params = url.searchParams;
             if (category) {
