@@ -2,7 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
     return [
       {
         source: '/api/:path*',
@@ -24,15 +24,12 @@ const nextConfig: NextConfig = {
       {
         protocol: 'http',
         hostname: 'localhost',
-        port: '8080',
+        port: '8081',
       },
-      ...(process.env.NEXT_PUBLIC_API_URL ? [{
-        protocol: new URL(process.env.NEXT_PUBLIC_API_URL).protocol.replace(':', '') as 'http' | 'https',
-        hostname: new URL(process.env.NEXT_PUBLIC_API_URL).hostname,
-        port: new URL(process.env.NEXT_PUBLIC_API_URL).port,
-      }] : []),
     ],
   },
 };
 
 export default nextConfig;
+
+// DDD 방법론? 철학? 
