@@ -1,10 +1,10 @@
-package com.new_cafe.app.backend.admin.menu.application.dto;
+package com.new_cafe.app.backend.admin.menu.application.result;
 
 import java.time.LocalDateTime;
 
 import com.new_cafe.app.backend.admin.menu.domain.Menu;
 
-public record MenuResponse(
+public record MenuResult(
         Long id,
         String korName,
         String engName,
@@ -15,8 +15,8 @@ public record MenuResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
-    public static MenuResponse from(Menu menu) {
-        return new MenuResponse(
+    public static MenuResult from(Menu menu) {
+        return new MenuResult(
                 menu.getId(),
                 menu.getKorName(),
                 menu.getEngName(),

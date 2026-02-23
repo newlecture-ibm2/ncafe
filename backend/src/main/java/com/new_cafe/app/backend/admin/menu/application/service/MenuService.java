@@ -3,15 +3,23 @@ package com.new_cafe.app.backend.admin.menu.application.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.new_cafe.app.backend.admin.menu.application.dto.MenuListResponse;
-import com.new_cafe.app.backend.admin.menu.application.dto.MenuResponse;
-import com.new_cafe.app.backend.admin.menu.application.port.in.ManageMenuUseCase;
+import com.new_cafe.app.backend.admin.menu.application.command.CreateMenuCommand;
+import com.new_cafe.app.backend.admin.menu.application.command.UpdateMenuCommand;
+import com.new_cafe.app.backend.admin.menu.application.port.in.CreateMenuUseCase;
+import com.new_cafe.app.backend.admin.menu.application.port.in.DeleteMenuUseCase;
+import com.new_cafe.app.backend.admin.menu.application.port.in.GetMenuListUseCase;
+import com.new_cafe.app.backend.admin.menu.application.port.in.GetMenuUseCase;
+import com.new_cafe.app.backend.admin.menu.application.port.in.UpdateMenuUseCase;
 import com.new_cafe.app.backend.admin.menu.application.port.out.MenuPort;
+import com.new_cafe.app.backend.admin.menu.application.result.MenuListResult;
+import com.new_cafe.app.backend.admin.menu.application.result.MenuResult;
 import com.new_cafe.app.backend.admin.menu.domain.Menu;
 
 @Service
 @Transactional
-public class MenuService implements ManageMenuUseCase {
+public class MenuService implements CreateMenuUseCase, UpdateMenuUseCase,
+                                     DeleteMenuUseCase, GetMenuUseCase,
+                                     GetMenuListUseCase {
 
     private final MenuPort menuPort;
 
@@ -20,7 +28,7 @@ public class MenuService implements ManageMenuUseCase {
     }
 
     @Override
-    public MenuResponse createMenu(CreateMenuCommand command) {
+    public MenuResult createMenu(CreateMenuCommand command) {
         Menu menu = Menu.create(
                 command.korName(),
                 command.engName(),
@@ -29,11 +37,11 @@ public class MenuService implements ManageMenuUseCase {
                 command.categoryId()
         );
         Menu saved = menuPort.save(menu);
-        return MenuResponse.from(saved);
+        return MenuResult.from(saved);
     }
 
     @Override
-    public MenuResponse updateMenu(UpdateMenuCommand command) {
+    public MenuResult updateMenu(UpdateMenuCommand command) {
         Menu menu = menuPort.findById(command.id())
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found: " + command.id()));
 
@@ -47,7 +55,7 @@ public class MenuService implements ManageMenuUseCase {
         );
 
         Menu saved = menuPort.save(menu);
-        return MenuResponse.from(saved);
+        return MenuResult.from(saved);
     }
 
     @Override
@@ -59,16 +67,16 @@ public class MenuService implements ManageMenuUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public MenuResponse getMenu(Long id) {
+    public MenuResult getMenu(Long id) {
         Menu menu = menuPort.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Menu not found: " + id));
-        return MenuResponse.from(menu);
+        return MenuResult.from(menu);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public MenuListResponse getMenus(String query, Long categoryId) {
+    public MenuListResult getMenus(String query, Long categoryId) {
         var menus = menuPort.findAll(query, categoryId);
-        return MenuListResponse.from(menus);
+        return MenuListResult.from(menus);
     }
 }
