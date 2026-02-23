@@ -1,9 +1,11 @@
 package com.new_cafe.app.backend.menu.application.port.out;
 
 import java.util.List;
-import com.new_cafe.app.backend.menu.domain.Menu; // New Domain Menu
+import java.util.Optional;
+
+import com.new_cafe.app.backend.menu.domain.Menu;
 
 public interface LoadMenuPort {
-    List<Menu> findAllByCategoryAndSearchQuery(Integer categoryId, String searchQuery);
-    Menu findById(Long id);
+    Optional<Menu> findById(Long id);
+    List<Menu> findAll(Long categoryId, String query);
 }
