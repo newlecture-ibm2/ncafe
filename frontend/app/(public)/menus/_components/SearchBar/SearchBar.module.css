@@ -1,0 +1,41 @@
+.wrapper {
+    position: relative;
+    max-width: 420px;
+}
+
+.icon {
+    position: absolute;
+    left: 1.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--color-gray-400);
+    pointer-events: none;
+    transition: color 0.2s ease;
+}
+
+.input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.8rem;
+    border: 1.5px solid var(--color-gray-200);
+    border-radius: 50px;
+    font-size: 0.9rem;
+    color: var(--color-gray-900);
+    background: white;
+    transition: all 0.25s ease;
+    outline: none;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.input::placeholder {
+    color: var(--color-gray-400);
+}
+
+.input:focus {
+    border-color: var(--color-primary-400);
+    box-shadow: 0 0 0 4px rgba(164, 117, 81, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.input:focus ~ .icon,
+.wrapper:focus-within .icon {
+    color: var(--color-primary-500);
+}

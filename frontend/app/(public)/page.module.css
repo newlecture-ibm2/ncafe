@@ -12,24 +12,46 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #6f4a31 0%, #a47551 50%, #8b5a3c 100%);
+  overflow: hidden;
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.heroBg {
+  position: absolute;
+  inset: -15%;
   background-image:
     url('/hero-bg.png'),
     linear-gradient(135deg, rgba(111, 74, 49, 0.95) 0%, rgba(164, 117, 81, 0.9) 50%, rgba(139, 90, 60, 0.95) 100%);
   background-size: cover;
   background-position: center;
   background-blend-mode: overlay;
-  color: white;
-  text-align: center;
-  padding: 2rem;
+  animation: panAround 40s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  z-index: 0;
+}
+
+@keyframes panAround {
+  0% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(-8%, 3%);
+  }
+  50% {
+    transform: translate(-3%, -6%);
+  }
+  75% {
+    transform: translate(6%, -2%);
+  }
+  100% {
+    transform: translate(0, 0);
+  }
 }
 
 .heroOverlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: radial-gradient(circle at center, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 100%);
   z-index: 1;
 }

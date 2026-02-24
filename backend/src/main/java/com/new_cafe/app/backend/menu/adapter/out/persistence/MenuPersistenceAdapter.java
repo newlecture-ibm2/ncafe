@@ -22,7 +22,7 @@ public class MenuPersistenceAdapter implements LoadMenuPort {
 
     @Override
     public Optional<Menu> findById(Long id) {
-        return menuRepository.findAvailableById(id)
+        return menuRepository.findByIdAndIsAvailableTrue(id)
                 .map(entity -> {
                     String imageSrc = menuImageRepository.findFirstImageSrcByMenuId(id);
                     return entity.toDomain(imageSrc);
@@ -36,11 +36,11 @@ public class MenuPersistenceAdapter implements LoadMenuPort {
         if (categoryId != null && query != null && !query.isEmpty()) {
             entities = menuRepository.findAllAvailableByCategoryIdAndQuery(categoryId, query);
         } else if (categoryId != null) {
-            entities = menuRepository.findAllAvailableByCategoryId(categoryId);
+            entities = menuRepository.findByIsAvailableTrueAndCategoryId(categoryId);
         } else if (query != null && !query.isEmpty()) {
             entities = menuRepository.findAllAvailableByQuery(query);
         } else {
-            entities = menuRepository.findAllAvailable();
+            entities = menuRepository.findByIsAvailableTrue();
         }
 
         return entities.stream()

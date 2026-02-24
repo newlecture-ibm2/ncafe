@@ -6,7 +6,8 @@ export default function Home() {
     <div className={styles.page}>
       {/* Hero Section */}
       <section className={styles.hero}>
-        <div className={styles.heroOverlay}></div>
+        <div className={styles.heroBg} />
+        <div className={styles.heroOverlay} />
         <div className={styles.heroContent}>
           <h1 className={styles.heroTitle}>
             따뜻한 커피 한 잔과 함께하는
@@ -19,7 +20,7 @@ export default function Home() {
             NCafe에서 당신의 이야기를 시작하세요
           </p>
           <div className={styles.heroCta}>
-            <Link href="/menu" className={styles.ctaPrimary}>
+            <Link href="/menus" className={styles.ctaPrimary}>
               메뉴 둘러보기
             </Link>
             <Link href="/community" className={styles.ctaSecondary}>
@@ -94,7 +95,7 @@ export default function Home() {
                 생산적인 하루를 시작하세요. 신선한 원두와 다양한 메뉴로
                 당신의 취향을 만족시켜 드립니다.
               </p>
-              <Link href="/menu" className={styles.contentLink}>
+              <Link href="/menus" className={styles.contentLink}>
                 메뉴 보기 →
               </Link>
             </div>
