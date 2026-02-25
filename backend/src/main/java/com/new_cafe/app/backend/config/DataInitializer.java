@@ -2,19 +2,24 @@ package com.new_cafe.app.backend.config;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
 
     private final JdbcTemplate jdbc;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(JdbcTemplate jdbc) {
+    public DataInitializer(JdbcTemplate jdbc, PasswordEncoder passwordEncoder) {
         this.jdbc = jdbc;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public void run(String... args) {
+        initUsers();
+
         Integer menuCount = jdbc.queryForObject("SELECT COUNT(*) FROM menus", Integer.class);
         if (menuCount != null && menuCount > 0) {
             return;
@@ -23,6 +28,32 @@ public class DataInitializer implements CommandLineRunner {
         initCategories();
         initMenus();
         initMenuImages();
+    }
+
+    private void initUsers() {
+        // 커스텀 회원 테이블
+        jdbc.execute("""
+            CREATE TABLE IF NOT EXISTS members (
+                id       BIGSERIAL PRIMARY KEY,
+                username VARCHAR(50)  UNIQUE NOT NULL,
+                password VARCHAR(255) NOT NULL,
+                email    VARCHAR(100),
+                role     VARCHAR(20)  NOT NULL DEFAULT 'USER',
+                enabled  BOOLEAN NOT NULL DEFAULT true
+            )
+        """);
+
+        // 이미 데이터가 있으면 스킵
+        Integer userCount = jdbc.queryForObject("SELECT COUNT(*) FROM members", Integer.class);
+        if (userCount != null && userCount > 0) return;
+
+        // admin 계정 (비밀번호: 1234)
+        jdbc.update("INSERT INTO members (username, password, email, role) VALUES (?, ?, ?, ?)",
+                "admin", passwordEncoder.encode("1234"), "admin@ncafe.com", "ADMIN");
+
+        // user 계정 (비밀번호: 1234)
+        jdbc.update("INSERT INTO members (username, password, email, role) VALUES (?, ?, ?, ?)",
+                "user", passwordEncoder.encode("1234"), "user@ncafe.com", "USER");
     }
 
     private void initCategories() {
