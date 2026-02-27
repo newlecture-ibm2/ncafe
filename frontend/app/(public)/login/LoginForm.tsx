@@ -2,44 +2,35 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/authStore';
 import styles from './login.module.css';
 
 export default function LoginForm() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const login = useAuthStore((state) => state.login);
+    const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setLoading(true);
 
         try {
-            // API_URL 환경변수 사용 (없으면 기본값)
-            const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
-
-            const response = await fetch(`${apiUrl}/api/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ username, password }),
-            });
-
-            if (!response.ok) {
-                throw new Error('로그인 실패: 아이디 또는 비밀번호를 확인하세요');
-            }
-
-            const data = await response.json();
-            console.log('로그인 성공, 토큰:', data.token);
-
-            // TODO: 토큰 저장 및 리다이렉트 로직 구현 (직접 구현하실 부분)
-            // localStorage.setItem('token', data.token);
-            // router.push('/');
-
-            alert(`로그인 성공! 토큰: ${data.token}`);
-
-        } catch (err: any) {
-            setError(err.message || '로그인 중 오류가 발생했습니다.');
+            await login(username, password);
+            router.push('/');          // 로그인 성공 → 홈으로
+            router.refresh();
+        } catch (err: unknown) {
+            const message = err instanceof Error
+                ? err.message
+                : '로그인 중 오류가 발생했습니다.';
+            setError(message);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -75,8 +66,8 @@ export default function LoginForm() {
 
             {error && <p className={styles.errorMessage}>{error}</p>}
 
-            <button type="submit" className={styles.button}>
-                로그인
+            <button type="submit" className={styles.button} disabled={loading}>
+                {loading ? '로그인 중...' : '로그인'}
             </button>
         </form>
     );

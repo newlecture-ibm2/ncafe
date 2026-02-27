@@ -1,72 +1,86 @@
 package com.new_cafe.app.backend.config;
 
-import javax.sql.DataSource;
+import java.util.List;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration // @Controller , @Service , @Repository , @Configuration
-// @EnableWebSecurity 
+// @EnableWebSecurity
 public class SecurityConfig {
+
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            .csrf(csrf -> csrf.disable()) // JWT 사용 시 CSRF 불필요
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // JWT: Stateless 세션
+            )
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/cookie/create").authenticated()                
-                .requestMatchers("/api/admin/**").hasRole("ADMIN") // 403 오류, DB에서는 ROLE_ADMIN으로 저장됨 
-                // .requestMatchers("/api/admin/**/create").hasAuthority("MENU_CREATE") // 403 오류, DB에서는 MENU_CREATE로 저장됨 
-                .requestMatchers("/cookie/session/create").authenticated()
+                .requestMatchers("/api/auth/**").permitAll() // 인증 API는 모두 허용
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 .anyRequest().permitAll()
             )
-            .formLogin(Customizer.withDefaults());
+            .formLogin(form -> form.disable()) // REST API 서버: form 로그인 비활성화
+            .httpBasic(basic -> basic.disable())
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((req, res, e) -> {
+                    // 미인증 요청시 302 리다이렉트 대신 401 반환
+                    res.setStatus(401);
+                    res.setContentType("application/json");
+                    res.getWriter().write("{\"error\":\"Unauthorized\"}");
+                })
+            )
+            // JWT 필터 추가
+            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
-    // @Bean
-    // public UserDetailsService userDetailsService() {
-    //     InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-    //     manager.createUser(User.withUsername("user").password(passwordEncoder().encode("1234")).roles("USER").build());
-    //     return manager;
-    // }
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:3000")); // 프론트엔드 주소
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true); // 쿠키 전달 허용 (필요 시)
 
-    @Bean    
-    public UserDetailsService userDetailsService(DataSource dataSource) {
-        JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-
-        // members 테이블에서 사용자 조회
-        // 결과 컬럼 구조 (순서 필수):
-        // +----------+--------------------------------------------------------------+---------+
-        // | username | password                                                     | enabled |
-        // +----------+--------------------------------------------------------------+---------+
-        // | admin    | $2a$10$xK7Gq2...                                             | true    |
-        // +----------+--------------------------------------------------------------+---------+
-        manager.setUsersByUsernameQuery(
-            "select nickname username, password, true as enabled from users where nickname = ?");
-
-        // members 테이블에서 권한 조회
-        // 결과 컬럼 구조 (순서 필수):
-        // +----------+------------+
-        // | username | authority  |
-        // +----------+------------+
-        // | admin    | ROLE_ADMIN |
-        // +----------+------------+
-        manager.setAuthoritiesByUsernameQuery(
-            "select nickname username, role authority from users where nickname = ?");
-
-        return manager;
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(
+            UserDetailsService userDetailsService,
+            PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(authProvider);
     }
 }

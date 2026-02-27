@@ -2,15 +2,12 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8081';
+    // 이미지는 실제 백엔드(Spring Boot) 서버에서 가져와야 하므로 API_BASE_URL(8081)을 사용합니다.
+    const backendUrl = process.env.API_BASE_URL || 'http://localhost:8081';
     return [
       {
-        source: '/api/:path*',
-        destination: `${apiUrl}/api/:path*`,
-      },
-      {
         source: '/images/:path*',
-        destination: `${apiUrl}/:path*`,
+        destination: `${backendUrl}/:path*`,
       },
     ];
   },

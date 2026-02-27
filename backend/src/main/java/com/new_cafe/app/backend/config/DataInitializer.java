@@ -4,6 +4,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
+import java.time.LocalDateTime;
 
 @Component
 public class DataInitializer implements CommandLineRunner {
@@ -31,29 +32,20 @@ public class DataInitializer implements CommandLineRunner {
     }
 
     private void initUsers() {
-        // 커스텀 회원 테이블
-        jdbc.execute("""
-            CREATE TABLE IF NOT EXISTS members (
-                id       BIGSERIAL PRIMARY KEY,
-                username VARCHAR(50)  UNIQUE NOT NULL,
-                password VARCHAR(255) NOT NULL,
-                email    VARCHAR(100),
-                role     VARCHAR(20)  NOT NULL DEFAULT 'USER',
-                enabled  BOOLEAN NOT NULL DEFAULT true
-            )
-        """);
-
-        // 이미 데이터가 있으면 스킵
-        Integer userCount = jdbc.queryForObject("SELECT COUNT(*) FROM members", Integer.class);
+        // JPA Entity(AuthUser)가 사용하는 테이블은 'users', 컬럼명은 'nickname'입니다.
+        Integer userCount = jdbc.queryForObject("SELECT COUNT(*) FROM users", Integer.class);
         if (userCount != null && userCount > 0) return;
 
+        String sql = "INSERT INTO users (nickname, password, role, enabled, created_at) VALUES (?, ?, ?, ?, ?)";
+        
         // admin 계정 (비밀번호: 1234)
-        jdbc.update("INSERT INTO members (username, password, email, role) VALUES (?, ?, ?, ?)",
-                "admin", passwordEncoder.encode("1234"), "admin@ncafe.com", "ADMIN");
+        jdbc.update(sql, "admin", passwordEncoder.encode("1234"), "ROLE_ADMIN", true, LocalDateTime.now());
 
         // user 계정 (비밀번호: 1234)
-        jdbc.update("INSERT INTO members (username, password, email, role) VALUES (?, ?, ?, ?)",
-                "user", passwordEncoder.encode("1234"), "user@ncafe.com", "USER");
+        jdbc.update(sql, "user", passwordEncoder.encode("1234"), "ROLE_USER", true, LocalDateTime.now());
+
+        // hong 계정 (테스트용, 비밀번호: 1111)
+        jdbc.update(sql, "hong", passwordEncoder.encode("1111"), "ROLE_USER", true, LocalDateTime.now());
     }
 
     private void initCategories() {

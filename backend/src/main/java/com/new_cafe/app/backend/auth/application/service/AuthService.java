@@ -3,35 +3,36 @@ package com.new_cafe.app.backend.auth.application.service;
 import com.new_cafe.app.backend.auth.application.port.in.LoginUseCase;
 import com.new_cafe.app.backend.auth.application.port.out.LoadUserPort;
 import com.new_cafe.app.backend.auth.domain.AuthUser;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import java.util.Optional;
 
 @Service
 public class AuthService implements LoginUseCase {
 
     private final LoadUserPort loadUserPort;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public AuthService(LoadUserPort loadUserPort) {
+    public AuthService(LoadUserPort loadUserPort, 
+                       PasswordEncoder passwordEncoder, 
+                       JwtTokenProvider jwtTokenProvider) {
         this.loadUserPort = loadUserPort;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Override
     public String login(LoginCommand command) {
-        // 1. 사용자 조회 (Port 호출)
-        Optional<AuthUser> userOptional = loadUserPort.loadUserByUsername(command.username());
+        // 1. 사용자 조회
+        AuthUser user = loadUserPort.loadUserByUsername(command.username())
+            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 
-        if (userOptional.isEmpty()) {
-            throw new IllegalArgumentException("User not found");
+        // 2. 비밀번호 검증
+        if (!passwordEncoder.matches(command.password(), user.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
 
-        AuthUser user = userOptional.get();
-
-        // 2. 비밀번호 검증 (사용자가 직접 구현할 부분)
-        // TODO: 여기서 command.password()와 user.getPassword()를 비교하고 검증 로직 구현
-        // 예: if (!passwordEncoder.matches(command.password(), user.getPassword())) ...
-
-        // 3. 토큰 생성 및 반환 (사용자가 직접 구현할 부분)
-        // TODO: JWT 토큰 생성 로직 구현
-        return "token-placeholder-for-" + user.getUsername();
+        // 3. 토큰 생성 및 반환
+        return jwtTokenProvider.createTokenFromUser(user.getUsername(), user.getRole());
     }
 }
